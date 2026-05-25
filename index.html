@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Guess My Number!</title>
+  </head>
+  <body>
+    <!-- Decorative Ambient Floating Orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Main Content Container -->
+    <div class="game-container">
+      
+      <!-- Premium Glass Header Card -->
+      <header class="glass-card">
+        <div class="header-top">
+          <!-- Mute Toggle Sound Effect Control -->
+          <button class="btn-icon mute-btn" id="muteBtn" title="Toggle Sound Effects">🔊</button>
+          
+          <h1>Guess My Number!</h1>
+          
+          <!-- Leaderboard Overlay Toggle -->
+          <button class="btn-icon trophy-btn" id="trophyBtn" title="View Leaderboard">🏆</button>
+        </div>
+
+        <p class="between" id="difficultyRangeText">Guess a number between 1 and 20</p>
+        
+        <!-- Interactive Difficulty Selector pills -->
+        <div class="difficulty-selector">
+          <button class="diff-btn" data-diff="easy" id="diffBtnEasy">Easy (1-10)</button>
+          <button class="diff-btn active" data-diff="medium" id="diffBtnMedium">Medium (1-20)</button>
+          <button class="diff-btn" data-diff="hard" id="diffBtnHard">Hard (1-50)</button>
+          <button class="diff-btn" data-diff="extreme" id="diffBtnExtreme">Extreme (1-100)</button>
+        </div>
+
+        <!-- Float-absolute Center Number Box (In-Flow, integrated cleanly with animated guardians!) -->
+        <div class="number-display-container">
+          <!-- Left Animated Character: Gloop (Low) -->
+          <div class="character-wrapper left-wrapper" title="Gloop reacts when guess is too low!">
+            <div class="character gloop" id="leftChar">
+              <div class="eyes">
+                <div class="eye"><div class="pupil"></div></div>
+                <div class="eye"><div class="pupil"></div></div>
+              </div>
+              <div class="mouth"></div>
+            </div>
+            <span class="char-label">Gloop</span>
+          </div>
+
+          <!-- Secret Number Box -->
+          <div class="number">?</div>
+
+          <!-- Right Animated Character: Bloop (High) -->
+          <div class="character-wrapper right-wrapper" title="Bloop reacts when guess is too high!">
+            <div class="character bloop" id="rightChar">
+              <div class="eyes">
+                <div class="eye"><div class="pupil"></div></div>
+                <div class="eye"><div class="pupil"></div></div>
+              </div>
+              <div class="mouth"></div>
+            </div>
+            <span class="char-label">Bloop</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Game Core Layout -->
+      <main>
+        
+        <!-- Left Glass Column: Inputs & Interactive Play Controls -->
+        <section class="glass-card left-panel">
+          <div class="input-group">
+            <span class="input-label">Your Guess</span>
+            <input type="number" class="guess" id="guessInput" min="1" max="20" placeholder="?" autocomplete="off" />
+          </div>
+          
+          <div class="action-buttons">
+            <button class="btn check" id="checkBtn">Check! →</button>
+            <button class="btn again btn-secondary" id="againBtn">Again! ↺</button>
+          </div>
+
+          <button class="btn btn-secondary hint-btn" id="hintBtn" style="width: 100%;">
+            💡 Use Hint (-3 pts)
+          </button>
+        </section>
+
+        <!-- Right Glass Column: Messages, Dynamic Stats & Guess Logs -->
+        <section class="glass-card right-panel">
+          <!-- Game message log feedback -->
+          <div class="message-box">
+            <p class="message">Start guessing...</p>
+          </div>
+
+          <!-- Game statistics grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-label">⏱️ Timer</span>
+              <span class="stat-val" id="timerVal">00:00</span>
+            </div>
+            
+            <div class="stat-card">
+              <span class="stat-label">💯 Score</span>
+              <span class="stat-val score">20</span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-label">🥇 Highscore</span>
+              <span class="stat-val highscore">0</span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-label">⚡ Best Time</span>
+              <span class="stat-val" id="bestTimeVal">--</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Guess History lists -->
+          <div class="guess-history">
+            <h3 class="history-title">Guess History</h3>
+            <ul class="history-list" id="historyList">
+              <!-- Dynamically populated list items -->
+            </ul>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- Modal Overlay: Dynamic Trophy Leaderboards -->
+    <div class="overlay hidden" id="leaderboardOverlay">
+      <div class="glass-card modal">
+        <button class="modal-close" id="closeLeaderboardBtn" title="Close">&times;</button>
+        <h2>🏆 Top Scores</h2>
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Name</th>
+              <th style="text-align: right;">Score</th>
+              <th style="text-align: right;">Time</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody">
+            <!-- Dynamically populated scores -->
+          </tbody>
+        </table>
+        <button class="btn btn-secondary" id="clearLeaderboardBtn" style="margin-top: 1rem; width: 100%;">
+          🧹 Clear Leaderboard
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Overlay: Rules & Info for Difficulty Levels -->
+    <div class="overlay hidden" id="rulesOverlay">
+      <div class="glass-card modal">
+        <button class="modal-close" id="closeRulesBtn" title="Close">&times;</button>
+        <h2 id="rulesTitle">🎮 Level Info & Rules</h2>
+        <div id="rulesContent" style="font-size: 1.5rem; line-height: 1.7; color: var(--text-main); margin: 1.5rem 0;">
+          <!-- Rules will be dynamically loaded here -->
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 1.2rem; width: 100%;">
+          <button class="btn" id="dismissRulesBtn">Got It! (Dismiss)</button>
+          <button class="btn btn-secondary" id="neverShowRulesBtn">Don't Show Rules Again</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Overlay: Win Game Name Registration -->
+    <div class="overlay hidden" id="winOverlay">
+      <div class="glass-card modal">
+        <div class="win-modal-content">
+          <div class="win-icon">🎉</div>
+          <h2 class="win-title">Victory!</h2>
+          
+          <div class="stars" id="winStars">★★★★★</div>
+          
+          <p style="font-size: 1.5rem; text-align: center; color: var(--text-muted);">
+            You successfully guessed the secret number!
+          </p>
+
+          <div class="win-stats-summary">
+            <div class="win-stat-item">
+              <span class="label">Score</span>
+              <span class="val score" id="winScoreVal">20</span>
+            </div>
+            <div class="win-stat-item" style="border-left: 1px solid rgba(255,255,255,0.1); padding-left: 3rem;">
+              <span class="label">Time</span>
+              <span class="val" id="winTimeVal">00:15</span>
+            </div>
+          </div>
+
+          <div class="name-input-group">
+            <input type="text" class="name-input" id="playerNameInput" placeholder="Enter Your Name" maxlength="15" autocomplete="off" />
+            <button class="btn save-btn" id="saveScoreBtn">Save to Leaderboard</button>
+          </div>
+          
+          <button class="btn btn-secondary" id="winCloseBtn" style="width: 100%;">
+            Play Again ↺
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core Javascript Code module -->
+    <script src="script.js"></script>
+  </body>
+</html>
