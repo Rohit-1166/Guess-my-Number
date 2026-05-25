@@ -24,7 +24,7 @@ A fun and feature-rich number guessing game built with pure **HTML**, **CSS**, a
 
 | Main Game | Rules Modal |
 |-----------|-------------|
-| ![Main Game](screenshots/screenshot1.png) | ![Rules Modal](screenshots/screenshot2.png) |
+| ![Main Game](screenshot1.png) | ![Rules Modal](screenshot2.png) |
 
 ---
 
